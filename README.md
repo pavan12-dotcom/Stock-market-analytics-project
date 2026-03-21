@@ -30,8 +30,8 @@ This project analyzes **10 major US equities** benchmarked against the **SPY (S&
 ### 1. Overview Tab
 Displays a 1-year price chart for AAPL with MA50, MA200, SPY overlay, and rolling volatility. Key metrics include current price ($194.83), Sharpe Ratio (0.59), 30-day volatility (26.7%), max drawdown (-21.3%), and CAGR (+21.1%). A Risk vs Return scatter plot compares all 10 equities visually against the SPY benchmark.
 
-![Overview](<img width="1366" height="634" alt="2026-03-21 (2)" src="https://github.com/user-attachments/assets/eb594416-8c9c-4e92-aa5c-fa40f3ca3ee3" />
-)
+<img width="1366" height="634" alt="2026-03-21 (2)" src="https://github.com/user-attachments/assets/eb594416-8c9c-4e92-aa5c-fa40f3ca3ee3" />
+
 
 ---
 
