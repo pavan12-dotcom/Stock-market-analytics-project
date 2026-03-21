@@ -1,4 +1,4 @@
-# 📈 Stock Analytics Terminal v3.0
+# Stock Analytics Terminal v3.0
 ### A Data Analysis Project on US Equity Markets
 
 > An interactive stock market analytics dashboard built to analyze, visualize, and derive insights from historical US equity data using statistical and financial analysis techniques.
@@ -7,55 +7,59 @@
 
 ---
 
-## 🧩 Problem Statement
+##  Problem Statement
 
 Investors and analysts struggle to make sense of stock market data without tools that go beyond basic price charts. Raw stock data alone doesn't reveal **hidden risks, volatility patterns, portfolio inefficiencies, or future price uncertainty**. Most free tools lack advanced risk metrics like CVaR, drawdown analysis, or portfolio optimization — making it difficult for data-driven decision-making. This project addresses that gap by building a comprehensive stock analytics dashboard that transforms raw market data into **actionable financial insights**.
 
 ---
 
-## ✅ Solution
+##  Solution
 
 This project analyzes **10 major US equities** benchmarked against the **SPY (S&P 500 ETF)** across a 1-year period. Using Python-based data analysis and interactive JavaScript visualizations, the dashboard delivers:
 
-- 📊 **Price & Trend Analysis** — Historical price charts with Moving Averages (MA50, MA200) and SPY comparison
-- ⚠️ **Risk Analytics** — Drawdown timelines, rolling volatility, VaR 95%, CVaR 95%, and a risk heatmap
-- 🎲 **Monte Carlo Simulation** — 200-path, 30-day price forecasting using Geometric Brownian Motion
-- 💼 **Portfolio Optimization** — Max Sharpe, Min Variance, and Equal Weight strategy comparison
-- 🔔 **Auto Insights** — Automated alerts for golden crosses, tail risks, kurtosis anomalies, and Sharpe signals
+ **Price & Trend Analysis** — Historical price charts with Moving Averages (MA50, MA200) and SPY comparison
+ **Risk Analytics** — Drawdown timelines, rolling volatility, VaR 95%, CVaR 95%, and a risk heatmap
+ **Monte Carlo Simulation** — 200-path, 30-day price forecasting using Geometric Brownian Motion
+ **Portfolio Optimization** — Max Sharpe, Min Variance, and Equal Weight strategy comparison
+ **Auto Insights** — Automated alerts for golden crosses, tail risks, kurtosis anomalies, and Sharpe signals
 
 ---
 
-## 🖼️ Dashboard Screenshots
+## Dashboard Screenshots
 
 ### 1. Overview Tab
 Displays a 1-year price chart for AAPL with MA50, MA200, SPY overlay, and rolling volatility. Key metrics include current price ($194.83), Sharpe Ratio (0.59), 30-day volatility (26.7%), max drawdown (-21.3%), and CAGR (+21.1%). A Risk vs Return scatter plot compares all 10 equities visually against the SPY benchmark.
 
-![Overview](screenshots/screenshot-overview.png)
+![Overview](<img width="1366" height="634" alt="2026-03-21 (2)" src="https://github.com/user-attachments/assets/eb594416-8c9c-4e92-aa5c-fa40f3ca3ee3" />
+)
 
 ---
 
 ### 2. Risk Analytics Tab
 Shows a Drawdown Timeline and Rolling 30-Day Volatility chart across all 10 stocks from March 2024 to February 2025. TSLA recorded the worst drawdown at nearly -55%, while TSLA and NVDA showed the highest volatility spikes (~60-65%). CVaR 95% analysis reveals extreme day losses are 33% worse than standard VaR estimates.
 
-![Risk Analytics](screenshots/screenshot-risk-analytics.png)
+![Risk Analytics](<img width="1366" height="636" alt="2026-03-21 (3)" src="https://github.com/user-attachments/assets/789fb774-d6ff-4e0a-b785-623eca809ba0" />
+)
 
 ---
 
 ### 3. Monte Carlo Simulation Tab
 Runs 200 simulated price paths over a 30-day forecast horizon for AAPL using Geometric Brownian Motion. Results show a bull case (90th percentile) of ~$215-217, a median (P50) of ~$196-197, and a bear case (10th percentile) of ~$180. Kurtosis analysis flags 4 of 6 tech stocks with fat-tail risk beyond normal distribution assumptions.
 
-![Monte Carlo](screenshots/screenshot-monte-carlo.png)
+![Monte Carlo](<img width="1366" height="628" alt="2026-03-21 (4)" src="https://github.com/user-attachments/assets/1dd99239-8973-46b6-8768-28801c8245e2" />
+)
 
 ---
 
 ### 4. Portfolio Optimization Tab
 Compares four portfolio strategies — Equal Weight (+11.1%, Sharpe 0.61), Max Sharpe (+27.4%, Sharpe 2.50), Min Variance (+13.6%, Sharpe 1.23), and SPY Benchmark (+8.6%, Sharpe 0.35). The Max Sharpe allocation donut chart shows optimal weight distribution. A Custom Portfolio Builder allows manual weight adjustment with real-time metric updates.
 
-![Portfolio](screenshots/screenshot-portfolio.png)
+![Portfolio](<img width="1366" height="638" alt="2026-03-21 (5)" src="https://github.com/user-attachments/assets/674f19ea-ac68-4259-9b80-b302688adf09" />
+)
 
 ---
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 ### Data Analysis & Statistics
 | Tool / Library | Purpose |
@@ -113,7 +117,7 @@ Compares four portfolio strategies — Equal Weight (+11.1%, Sharpe 0.61), Max S
 
 ---
 
-## 📐 Key Metrics Explained
+##  Key Metrics Explained
 
 | Metric | Description |
 |---|---|
@@ -130,7 +134,7 @@ Compares four portfolio strategies — Equal Weight (+11.1%, Sharpe 0.61), Max S
 
 ---
 
-## 📊 Stocks Analyzed
+##  Stocks Analyzed
 
 | Ticker | Company |
 |---|---|
@@ -148,7 +152,7 @@ Compares four portfolio strategies — Equal Weight (+11.1%, Sharpe 0.61), Max S
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 stock-analytics-terminal/
@@ -180,7 +184,7 @@ stock-analytics-terminal/
 
 ---
 
-## ▶️ How to Run
+##  How to Run
 
 ```bash
 # Clone the repository
@@ -212,14 +216,14 @@ jupyter
 
 ---
 
-## 💡 Key Insights from Analysis
+##  Key Insights from Analysis
 
-- 🔴 **TSLA** recorded the worst drawdown at **-55.1%** with kurtosis **6.8**, indicating fat-tail risk **2x** a normal distribution
-- 🟢 **MSFT** offered the best risk-adjusted return among all equities on the Risk vs Return scatter plot
-- ⚡ **Max Sharpe portfolio** delivered **+27.4% return** with a Sharpe of **2.50** vs SPY's **+8.6%** at Sharpe **0.35**
-- ⚠️ **CVaR 95%** showed extreme losses are **33% worse** than standard VaR estimates across the portfolio
-- 📉 **AMZN and V** showed negative Sharpe ratios, underperforming the risk-free rate on a risk-adjusted basis
-- 🔔 **Golden Cross signals** detected recently in TSLA, JNJ, and V — a bullish technical indicator
+-  **TSLA** recorded the worst drawdown at **-55.1%** with kurtosis **6.8**, indicating fat-tail risk **2x** a normal distribution
+-  **MSFT** offered the best risk-adjusted return among all equities on the Risk vs Return scatter plot
+-  **Max Sharpe portfolio** delivered **+27.4% return** with a Sharpe of **2.50** vs SPY's **+8.6%** at Sharpe **0.35**
+-  **CVaR 95%** showed extreme losses are **33% worse** than standard VaR estimates across the portfolio
+-  **AMZN and V** showed negative Sharpe ratios, underperforming the risk-free rate on a risk-adjusted basis
+-  **Golden Cross signals** detected recently in TSLA, JNJ, and V — a bullish technical indicator
 
 ---
 
@@ -229,7 +233,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ---
 
-## 🙌 Acknowledgements
+##  Acknowledgements
 
 - Market data sourced via [yfinance](https://pypi.org/project/yfinance/) (Yahoo Finance)
 - Portfolio optimization based on **Modern Portfolio Theory** (Markowitz, 1952)
