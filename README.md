@@ -1,29 +1,21 @@
 # Stock-market-analytics-project
 An end-to-end Real-Time Stock Market Analytics Platform tracking 10 major stocks (AAPL, MSFT, GOOGL, NVDA, TSLA &amp; more) — Live Yahoo Finance API, Python EDA, 6 Analysis Charts, Interactive HTML Dashboard &amp; 5-Tab Excel Report. Built for Data Analyst portfolios.
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/7bea8b62-51dc-4d45-86f7-12c3ac260547" />
+
 ## 📊 Dashboard Preview
 
-Below is a sample view of the stock market analysis dashboard:
+### 1. Overview
+![Overview](<img width="1366" height="634" alt="2026-03-21 (2)" src="https://github.com/user-attachments/assets/d7e86818-3e70-4b4a-a229-a33228bad4e2" />
+)
 
-![Dashboard](images/dashboard.png)
+### 2. Stock Trends
+![Trends](images/d2.png)
 
----
+### 3. Volume Analysis
+![Volume](images/d3.png)
 
-## 🔗 Live Dashboard
-
-You can explore the interactive dashboard here:  
-👉 [View Live Dashboard](file:///C:/Users/PAVAN/AppData/Local/Temp/9564147e-f9df-4217-aa66-8733a2f808ce_files%20(4).zip.8ce/Stock_Live_Dashboard_v3.html)
-
----
-
-## 📈 Key Insights
-
-- Identified top performing stocks based on returns  
-- Observed trend patterns using moving averages  
-- Compared volume vs price fluctuations  
-- Highlighted high volatility periods  
-
----
-
+### 4. Insights
+![Insights](images/d4.png)
 ## 🛠️ Tools Used
 
 - Python (Pandas, Matplotlib) / Power BI  
