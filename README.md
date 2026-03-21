@@ -37,25 +37,23 @@ Displays a 1-year price chart for AAPL with MA50, MA200, SPY overlay, and rollin
 
 ### 2. Risk Analytics Tab
 Shows a Drawdown Timeline and Rolling 30-Day Volatility chart across all 10 stocks from March 2024 to February 2025. TSLA recorded the worst drawdown at nearly -55%, while TSLA and NVDA showed the highest volatility spikes (~60-65%). CVaR 95% analysis reveals extreme day losses are 33% worse than standard VaR estimates.
+<img width="1366" height="636" alt="2026-03-21 (3)" src="https://github.com/user-attachments/assets/789fb774-d6ff-4e0a-b785-623eca809ba0" />
 
-![Risk Analytics](<img width="1366" height="636" alt="2026-03-21 (3)" src="https://github.com/user-attachments/assets/789fb774-d6ff-4e0a-b785-623eca809ba0" />
-)
 
 ---
 
 ### 3. Monte Carlo Simulation Tab
 Runs 200 simulated price paths over a 30-day forecast horizon for AAPL using Geometric Brownian Motion. Results show a bull case (90th percentile) of ~$215-217, a median (P50) of ~$196-197, and a bear case (10th percentile) of ~$180. Kurtosis analysis flags 4 of 6 tech stocks with fat-tail risk beyond normal distribution assumptions.
 
-![Monte Carlo](<img width="1366" height="628" alt="2026-03-21 (4)" src="https://github.com/user-attachments/assets/1dd99239-8973-46b6-8768-28801c8245e2" />
-)
+<img width="1366" height="628" alt="2026-03-21 (4)" src="https://github.com/user-attachments/assets/1dd99239-8973-46b6-8768-28801c8245e2" />
+
 
 ---
 
 ### 4. Portfolio Optimization Tab
 Compares four portfolio strategies — Equal Weight (+11.1%, Sharpe 0.61), Max Sharpe (+27.4%, Sharpe 2.50), Min Variance (+13.6%, Sharpe 1.23), and SPY Benchmark (+8.6%, Sharpe 0.35). The Max Sharpe allocation donut chart shows optimal weight distribution. A Custom Portfolio Builder allows manual weight adjustment with real-time metric updates.
 
-![Portfolio](<img width="1366" height="638" alt="2026-03-21 (5)" src="https://github.com/user-attachments/assets/674f19ea-ac68-4259-9b80-b302688adf09" />
-)
+<img width="1366" height="638" alt="2026-03-21 (5)" src="https://github.com/user-attachments/assets/674f19ea-ac68-4259-9b80-b302688adf09" />
 
 ---
 
