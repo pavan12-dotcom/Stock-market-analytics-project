@@ -10,6 +10,8 @@ An end-to-end Data Analyst project that tracks **10 major stocks** (AAPL, MSFT, 
 
 ---
 
+[![Live Dashboard](https://img.shields.shields.shields.shields.io/badge/Live-Dashboard-blueviolet?style=flat&logo=netlify&logoColor=white)](https://stock-analysis-dashboards.netlify.app)
+
 ## 📋 Problem Statement
 
 ### Background
