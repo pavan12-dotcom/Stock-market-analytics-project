@@ -1,0 +1,30 @@
+[build]
+  # No build command needed - this is a static site
+  command = ""
+  publish = "."
+
+[context.production]
+  command = ""
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/Stock_Live_Dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/index.html"
+  to = "/Stock_Live_Dashboard.html"
+  status = 200
+
+[functions]
+  directory = "functions"
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

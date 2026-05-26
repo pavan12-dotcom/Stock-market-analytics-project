@@ -1,0 +1,12 @@
+node_modules/
+.netlify/
+.env
+.env.local
+*.pyc
+__pycache__/
+*.egg-info/
+.Python
+.venv/
+venv/
+*.log
+.DS_Store
