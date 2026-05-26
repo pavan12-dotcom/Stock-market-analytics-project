@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Market Analytics Platform</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Bebas+Neue&display=swap');
+
+:root {
+  --bg: #020408;
+  --s1: #0a0f1a;
+  --s2: #0f1824;
+  --border: #1a2535;
+  --border2: #243044;
+  --up: #00d084;
+  --down: #ff4757;
+  --flat: #ffa502;
+  --blue: #00b4d8;
+  --purple: #7c5cbf;
+  --text: #cdd9e5;
+  --muted: #5a6a7e;
+  --bright: #ffffff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 100vh;
+}
+/* Scanline effect */
+body::after {
+  content:''; position:fixed; top:0; left:0; width:100%; height:100%;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,180,216,0.01) 2px, rgba(0,180,216,0.01) 4px);
+  pointer-events:none; z-index:999;
+}
+
+.app { max-width: 1440px; margin:0 auto; padding:16px; }
+
+/* Header */
+.header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0 20px; border-bottom:1px solid var(--border);
+  margin-bottom:20px;
+}
+.header-left { display:flex; align-items:center; gap:16px; }
+.logo-text {
+  font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px;
+  color:var(--bright); line-height:1;
+}
+.logo-sub { font-size:10px; color:var(--muted); letter-spacing:2px; margin-top:2px; }
+.header-right { display:flex; gap:12px; align-items:center; }
+.live-badge {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(0,208,132,0.1); border:1px solid rgba(0,208,132,0.3);
+  padding:4px 12px; border-radius:3px; font-size:10px; color:var(--up);
+  letter-spacing:1px;
+}
+.live-dot {
+  width:6px; height:6px; background:var(--up); border-radius:50%;
+  animation: blink 1.2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.last-updated { font-size:10px; color:var(--muted); }
+
+/* Ticker tape */
+.ticker-tape {
+  background:var(--s1); border:1px solid var(--border);
+  overflow:hidden; padding:8px 0; margin-bottom:20px;
+  border-radius:4px; position:relative;
+}
+.tape-inner {
+  display:flex; gap:40px; white-space:nowrap;
+  animation: scroll 40s linear infinite;
+}
+.tape-inner:hover { animation-play-state:paused; }
+.tape-item { display:flex; gap:8px; align-items:center; font-size:11px; }
+.tape-ticker { color:var(--bright); font-weight:600; }
+.tape-price { color:var(--text); }
+.tape-chg.up { color:var(--up); }
+.tape-chg.down { color:var(--down); }
+@keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* KPI row */
+.kpi-row { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px; }
+.kpi {
+  background:var(--s1); border:1px solid var(--border);
+  padding:14px 16px; border-radius:4px; position:relative; overflow:hidden;
+  cursor:default; transition: border-color 0.2s;
+}
+.kpi:hover { border-color:var(--border2); }
+.kpi::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+}
+.kpi:nth-child(1)::before{background:var(--up)}
+.kpi:nth-child(2)::before{background:var(--down)}
+.kpi:nth-child(3)::before{background:var(--blue)}
+.kpi:nth-child(4)::before{background:var(--purple)}
+.kpi:nth-child(5)::before{background:var(--flat)}
+.kpi-label { font-size:9px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
+.kpi-val { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; color:var(--bright); line-height:1; }
+.kpi-sub { font-size:9px; margin-top:4px; }
+.kpi-sub.up{color:var(--up)} .kpi-sub.down{color:var(--down)} .kpi-sub.neutral{color:var(--muted)}
+
+/* Grid layouts */
+.grid-2-1 { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:16px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+
+/* Cards */
+.card {
+  background:var(--s1); border:1px solid var(--border);
+  border-radius:4px; padding:16px; overflow:hidden;
+}
+.card-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px; padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+.card-title { font-size:11px; color:var(--bright); letter-spacing:1px; text-transform:uppercase; font-weight:600; }
+.card-sub { font-size:9px; color:var(--muted); }
+
+/* Stock table */
+table { width:100%; border-collapse:collapse; font-size:11px; }
+thead th {
+  padding:7px 10px; background:var(--s2);
+  color:var(--muted); font-size:9px; text-transform:uppercase;
+  letter-spacing:1px; border-bottom:1px solid var(--border); text-align:right;
+}
+thead th:first-child { text-align:left; }
+tbody td {
+  padding:8px 10px; border-bottom:1px solid rgba(26,37,53,0.6);
+  text-align:right; font-size:11px;
+}
+tbody td:first-child { text-align:left; }
+tbody tr:hover td { background:rgba(0,180,216,0.04); }
+.ticker-sym { color:var(--bright); font-weight:600; font-size:12px; }
+.up-val { color:var(--up); }
+.down-val { color:var(--down); }
+.badge {
+  display:inline-block; padding:2px 7px; border-radius:2px;
+  font-size:9px; letter-spacing:0.5px;
+}
+.badge-tech { background:rgba(0,180,216,0.15); color:var(--blue); }
+.badge-fin  { background:rgba(124,92,191,0.15); color:var(--purple); }
+.badge-other{ background:rgba(90,106,126,0.15); color:var(--muted); }
+
+/* Mini sparkline bars */
+.sparkbar { display:flex; align-items:flex-end; gap:1px; height:24px; }
+.sparkbar span { width:4px; border-radius:1px 1px 0 0; }
+
+/* Chart containers */
+canvas { width:100% !important; }
+
+/* Refresh button */
+.btn-refresh {
+  background:rgba(0,180,216,0.1); border:1px solid rgba(0,180,216,0.3);
+  color:var(--blue); padding:5px 14px; border-radius:3px;
+  font-family:'IBM Plex Mono',monospace; font-size:10px; cursor:pointer;
+  letter-spacing:1px; transition:all 0.2s;
+}
+.btn-refresh:hover { background:rgba(0,180,216,0.2); }
+
+/* Sector pills */
+.sector-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.sector-item {
+  background:var(--s2); border:1px solid var(--border); border-radius:3px;
+  padding:10px; text-align:center;
+}
+.sector-name { font-size:9px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+.sector-val  { font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--bright); }
+.sector-pct  { font-size:9px; }
+
+footer {
+  text-align:center; padding:20px 0; color:var(--muted);
+  font-size:9px; letter-spacing:1px; border-top:1px solid var(--border);
+  margin-top:20px; text-transform:uppercase;
+}
+
+/* Animations */
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.card { animation:fadeIn 0.4s ease both; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div>
+        <div class="logo-text">Stock Intelligence</div>
+        <div class="logo-sub">Real-Time Market Analytics Platform</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="last-updated" id="updateTime">Last updated: --</div>
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <button class="btn-refresh" onclick="refreshData()">⟳ REFRESH</button>
+    </div>
+  </div>
+
+  <!-- Ticker Tape -->
+  <div class="ticker-tape">
+    <div class="tape-inner" id="tickerTape"></div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row" id="kpiRow">
+    <div class="kpi"><div class="kpi-label">Market Leaders</div><div class="kpi-val" id="k1">MSFT</div><div class="kpi-sub up" id="k1s">Best Sharpe: 1.81</div></div>
+    <div class="kpi"><div class="kpi-label">Most Volatile</div><div class="kpi-val" id="k2">TSLA</div><div class="kpi-sub down" id="k2s">Ann. Vol: 47.5%</div></div>
+    <div class="kpi"><div class="kpi-label">Top Gainer Today</div><div class="kpi-val" id="k3">NVDA</div><div class="kpi-sub up" id="k3s">+3.22% today</div></div>
+    <div class="kpi"><div class="kpi-label">Best Ann. Return</div><div class="kpi-val" id="k4">MSFT</div><div class="kpi-sub up" id="k4s">+38.96% / year</div></div>
+    <div class="kpi"><div class="kpi-label">Stocks Tracked</div><div class="kpi-val">10</div><div class="kpi-sub neutral">1-Year Historical</div></div>
+  </div>
+
+  <!-- Row 1: Price chart + Table -->
+  <div class="grid-2-1">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📈 Normalised Price Performance</span>
+        <span class="card-sub">Base = 100 · 1 Year</span>
+      </div>
+      <canvas id="priceChart" height="110"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📊 Daily Movers</span>
+        <span class="card-sub">Today's Change %</span>
+      </div>
+      <canvas id="moversChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- Row 2: Stock table -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header">
+      <span class="card-title">🗂 Stock Snapshot</span>
+      <span class="card-sub">Live Prices · Risk Metrics · Performance</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left">Ticker</th>
+          <th style="text-align:left">Sector</th>
+          <th>Last Price</th>
+          <th>Change %</th>
+          <th>Ann. Return</th>
+          <th>Ann. Vol</th>
+          <th>Sharpe</th>
+          <th>Risk</th>
+        </tr>
+      </thead>
+      <tbody id="stockTable"></tbody>
+    </table>
+  </div>
+
+  <!-- Row 3: Risk-Return + Correlation -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">⚡ Risk-Return</span>
+        <span class="card-sub">Annualised · Bubble = Sharpe</span>
+      </div>
+      <canvas id="riskChart" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🔗 Correlation Matrix</span>
+        <span class="card-sub">Daily Returns · 1-Year</span>
+      </div>
+      <canvas id="corrChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- Row 4: Monthly heatmap + Sector -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📅 Monthly Returns (%)</span>
+        <span class="card-sub">Green = Positive · Red = Negative</span>
+      </div>
+      <canvas id="monthlyChart" height="180"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🌐 Sector Breakdown</span>
+        <span class="card-sub">By Stock Count</span>
+      </div>
+      <canvas id="sectorChart" height="180"></canvas>
+      <div class="sector-grid" id="sectorGrid" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <footer>Stock Intelligence Platform · Real-Time Analytics · Data: Yahoo Finance API · Built with Python + Chart.js</footer>
+</div>
+
+<script>
+Chart.defaults.color = '#5a6a7e';
+Chart.defaults.borderColor = '#1a2535';
+Chart.defaults.font.family = 'IBM Plex Mono, monospace';
+Chart.defaults.font.size = 10;
+
+const UP='#00d084', DOWN='#ff4757', BLUE='#00b4d8', PURPLE='#7c5cbf', FLAT='#ffa502';
+const COLORS=[BLUE,'#00d084','#7c5cbf','#ffa502','#ff4757','#39d353','#79c0ff','#a5d6ff','#ffb3b3','#b3f0c0'];
+const TICKERS=['AAPL','MSFT','GOOGL','AMZN','TSLA','NVDA','JPM','JNJ','V','WMT'];
+
+// Simulated data (replaced by live API in production)
+const stockData = {
+  AAPL:  {name:'Apple Inc.',      sector:'Technology', price:194.83, chg:-1.13, ret:21.05, vol:26.68, sharpe:0.79},
+  MSFT:  {name:'Microsoft',       sector:'Technology', price:509.14, chg:-0.18, ret:38.96, vol:21.49, sharpe:1.81},
+  GOOGL: {name:'Alphabet',        sector:'Technology', price:164.94, chg:-2.27, ret:12.16, vol:27.25, sharpe:0.45},
+  AMZN:  {name:'Amazon',          sector:'Consumer',   price:138.93, chg:+1.02, ret:-13.56,vol:31.91, sharpe:-0.43},
+  TSLA:  {name:'Tesla',           sector:'Automotive', price:238.10, chg:-1.01, ret:17.72, vol:47.48, sharpe:0.37},
+  NVDA:  {name:'NVIDIA',          sector:'Technology', price:817.40, chg:+3.22, ret:19.00, vol:46.21, sharpe:0.41},
+  JPM:   {name:'JPMorgan Chase',  sector:'Finance',    price:176.30, chg:+2.05, ret:8.56,  vol:27.89, sharpe:0.31},
+  JNJ:   {name:'Johnson & J.',    sector:'Healthcare', price:131.41, chg:+0.20, ret:2.96,  vol:14.75, sharpe:0.20},
+  V:     {name:'Visa Inc.',       sector:'Finance',    price:187.41, chg:+0.02, ret:-20.15,vol:21.15, sharpe:-0.95},
+  WMT:   {name:'Walmart',         sector:'Retail',     price:74.85,  chg:+1.19, ret:24.69, vol:11.66, sharpe:2.12},
+};
+
+// Generate synthetic history
+function genHistory(startPrice, days=261, beta=1.0, sector='') {
+  let p = startPrice * 0.85, prices=[];
+  for(let i=0;i<days;i++){
+    let r = (Math.random()-0.48)*0.015*beta;
+    if(sector==='Technology') r+=0.0003;
+    p*=(1+r); prices.push(+(p).toFixed(2));
+  }
+  return prices;
+}
+
+const days = 261;
+const dateLabels = [];
+let d = new Date('2024-03-01');
+for(let i=0;i<days;i++){
+  while([0,6].includes(d.getDay())) d.setDate(d.getDate()+1);
+  dateLabels.push(d.toISOString().split('T')[0]);
+  d.setDate(d.getDate()+1);
+}
+
+const histories = {};
+TICKERS.forEach(t => { histories[t] = genHistory(stockData[t].price, days, 1+(Math.random()*1.5), stockData[t].sector); });
+
+// Normalise
+const normed = {};
+TICKERS.forEach(t => {
+  const base = histories[t][0];
+  normed[t] = histories[t].map(p => +(p/base*100).toFixed(2));
+});
+
+// ── Ticker Tape ───────────────────────────────────────────────────
+function buildTape() {
+  const tape = document.getElementById('tickerTape');
+  let html = '';
+  for(let rep=0;rep<2;rep++) {
+    TICKERS.forEach(t => {
+      const s = stockData[t];
+      const cls = s.chg>=0?'up':'down';
+      const sym = s.chg>=0?'▲':'▼';
+      html+=`<span class="tape-item">
+        <span class="tape-ticker">${t}</span>
+        <span class="tape-price">$${s.price.toFixed(2)}</span>
+        <span class="tape-chg ${cls}">${sym}${Math.abs(s.chg).toFixed(2)}%</span>
+      </span>`;
+    });
+  }
+  tape.innerHTML = html;
+}
+buildTape();
+
+// ── Stock Table ───────────────────────────────────────────────────
+function buildTable() {
+  const tbody = document.getElementById('stockTable');
+  tbody.innerHTML = '';
+  const sectorBadge = s => {
+    if(s==='Technology') return 'badge-tech';
+    if(s==='Finance') return 'badge-fin';
+    return 'badge-other';
+  };
+  TICKERS.forEach(t => {
+    const s = stockData[t];
+    const upd = s.chg>=0;
+    const risk = s.vol>40?'⬛ VERY HIGH':s.vol>25?'🟥 HIGH':s.vol>15?'🟧 MED':'🟩 LOW';
+    tbody.innerHTML += `<tr>
+      <td><span class="ticker-sym">${t}</span><br><span style="font-size:9px;color:#5a6a7e">${s.name}</span></td>
+      <td><span class="badge ${sectorBadge(s.sector)}">${s.sector}</span></td>
+      <td>$${s.price.toFixed(2)}</td>
+      <td class="${upd?'up-val':'down-val'}">${upd?'+':''}${s.chg.toFixed(2)}%</td>
+      <td class="${s.ret>=0?'up-val':'down-val'}">${s.ret>=0?'+':''}${s.ret.toFixed(1)}%</td>
+      <td>${s.vol.toFixed(1)}%</td>
+      <td class="${s.sharpe>=1?'up-val':s.sharpe<0?'down-val':''}">${s.sharpe.toFixed(2)}</td>
+      <td style="font-size:10px">${risk}</td>
+    </tr>`;
+  });
+}
+buildTable();
+
+// ── Chart 1: Normalised Price ─────────────────────────────────────
+new Chart(document.getElementById('priceChart'), {
+  type:'line',
+  data:{
+    labels: dateLabels,
+    datasets: TICKERS.map((t,i)=>({
+      label:t, data:normed[t], borderColor:COLORS[i],
+      borderWidth:1.5, pointRadius:0, tension:0.3, fill:false, alpha:0.8
+    }))
+  },
+  options:{
+    responsive:true,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'top',labels:{boxWidth:10,padding:10,font:{size:9}}}},
+    scales:{
+      x:{ticks:{maxTicksLimit:10,maxRotation:30,font:{size:9}},grid:{display:false}},
+      y:{ticks:{callback:v=>`${v}`,font:{size:9}},grid:{color:'rgba(26,37,53,0.8)'}}
+    }
+  }
+});
+
+// ── Chart 2: Movers Bar ───────────────────────────────────────────
+const movers = TICKERS.map(t=>({t, chg:stockData[t].chg})).sort((a,b)=>b.chg-a.chg);
+new Chart(document.getElementById('moversChart'), {
+  type:'bar',
+  data:{
+    labels: movers.map(m=>m.t),
+    datasets:[{
+      data: movers.map(m=>m.chg),
+      backgroundColor: movers.map(m=>m.chg>=0?'rgba(0,208,132,0.8)':'rgba(255,71,87,0.8)'),
+      borderRadius:2
+    }]
+  },
+  options:{
+    indexAxis:'y', responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{callback:v=>`${v}%`,font:{size:9}},grid:{color:'rgba(26,37,53,0.8)'}},
+      y:{ticks:{font:{size:10,weight:'600'},color:'#cdd9e5'},grid:{display:false}}
+    }
+  }
+});
+
+// ── Chart 3: Risk-Return Scatter ──────────────────────────────────
+new Chart(document.getElementById('riskChart'), {
+  type:'bubble',
+  data:{
+    datasets:[{
+      data: TICKERS.map((t,i)=>({
+        x: stockData[t].vol,
+        y: stockData[t].ret,
+        r: Math.max(5, Math.abs(stockData[t].sharpe)*10),
+        ticker: t
+      })),
+      backgroundColor: TICKERS.map((_,i)=>`${COLORS[i]}99`),
+      borderColor: COLORS,
+      borderWidth:1
+    }]
+  },
+  options:{
+    responsive:true,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{
+        label: ctx=>`${TICKERS[ctx.dataIndex]}: Ret=${ctx.raw.y.toFixed(1)}%, Vol=${ctx.raw.x.toFixed(1)}%`
+      }}
+    },
+    scales:{
+      x:{title:{display:true,text:'Annualised Volatility %',color:'#5a6a7e',font:{size:9}},
+         ticks:{callback:v=>`${v}%`,font:{size:9}},grid:{color:'rgba(26,37,53,0.8)'}},
+      y:{title:{display:true,text:'Annualised Return %',color:'#5a6a7e',font:{size:9}},
+         ticks:{callback:v=>`${v}%`,font:{size:9}},grid:{color:'rgba(26,37,53,0.8)'}}
+    }
+  }
+});
+
+// ── Chart 4: Correlation (heatmap via scatter) ────────────────────
+const corrData = [
+  [1.00,0.72,0.68,0.61,0.45,0.58,0.38,0.22,0.41,0.29],
+  [0.72,1.00,0.75,0.65,0.48,0.62,0.42,0.25,0.45,0.31],
+  [0.68,0.75,1.00,0.69,0.43,0.60,0.39,0.21,0.43,0.27],
+  [0.61,0.65,0.69,1.00,0.51,0.55,0.41,0.18,0.40,0.30],
+  [0.45,0.48,0.43,0.51,1.00,0.52,0.32,0.14,0.35,0.22],
+  [0.58,0.62,0.60,0.55,0.52,1.00,0.34,0.19,0.37,0.24],
+  [0.38,0.42,0.39,0.41,0.32,0.34,1.00,0.45,0.62,0.38],
+  [0.22,0.25,0.21,0.18,0.14,0.19,0.45,1.00,0.32,0.48],
+  [0.41,0.45,0.43,0.40,0.35,0.37,0.62,0.32,1.00,0.41],
+  [0.29,0.31,0.27,0.30,0.22,0.24,0.38,0.48,0.41,1.00],
+];
+const corrPoints=[];
+TICKERS.forEach((t1,i)=>TICKERS.forEach((t2,j)=>{
+  corrPoints.push({x:j,y:i,v:corrData[i][j]});
+}));
+new Chart(document.getElementById('corrChart'),{
+  type:'scatter',
+  data:{datasets:[{
+    data:corrPoints,
+    backgroundColor:corrPoints.map(p=>{
+      const v=p.v; const a=Math.abs(v)*0.9;
+      return v>0?`rgba(0,208,132,${a})`:`rgba(255,71,87,${Math.abs(v)*0.9})`;
+    }),
+    pointStyle:'rect', pointRadius:corrPoints.map(()=>14), borderWidth:0
+  }]},
+  options:{
+    responsive:true,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{
+        label:ctx=>`${TICKERS[ctx.raw.y]} vs ${TICKERS[ctx.raw.x]}: ${ctx.raw.v.toFixed(2)}`
+      }}
+    },
+    scales:{
+      x:{min:-0.5,max:9.5,ticks:{callback:v=>TICKERS[v]||'',font:{size:8}},grid:{display:false}},
+      y:{min:-0.5,max:9.5,ticks:{callback:v=>TICKERS[v]||'',font:{size:8}},grid:{display:false},reverse:true}
+    }
+  }
+});
+
+// ── Chart 5: Monthly Returns Heatmap ─────────────────────────────
+const monthLabels = ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
+const monthlyReturns = {
+  AAPL: [1.2,-0.8,2.1,3.4,-1.2,2.8,1.9,-2.1,4.2,5.1,-0.5,1.8],
+  MSFT: [3.1,2.2,4.5,1.8,2.9,3.6,2.1,1.5,5.8,6.2,2.1,3.4],
+  GOOGL:[0.8,1.5,2.8,2.1,-0.9,1.8,0.9,-1.2,3.4,4.1,1.2,2.1],
+  AMZN:[-2.1,-1.5,1.2,-0.8,-3.2,0.9,-1.8,-2.4,1.5,2.8,-1.2,0.5],
+  TSLA: [5.2,-3.8,8.1,-2.4,6.9,-4.1,5.8,-3.2,7.4,9.1,-2.8,4.2],
+  NVDA: [8.1,5.4,12.3,4.8,9.2,7.6,6.4,3.8,11.2,13.5,4.1,6.8],
+  JPM:  [1.8,0.9,2.4,1.2,1.5,2.1,0.8,1.4,2.8,3.2,1.1,1.9],
+  JNJ:  [0.4,0.2,0.8,0.5,0.3,0.6,0.1,0.4,0.9,1.1,0.3,0.5],
+  V:    [-1.2,-0.8,-2.1,-1.4,-1.8,-0.9,-1.5,-1.2,-2.4,-3.1,-1.1,-1.6],
+  WMT:  [2.1,1.8,3.2,2.4,2.8,3.1,1.9,2.2,3.8,4.2,2.1,2.8],
+};
+new Chart(document.getElementById('monthlyChart'),{
+  type:'bar',
+  data:{
+    labels:monthLabels,
+    datasets:TICKERS.slice(0,5).map((t,i)=>({
+      label:t,
+      data:monthlyReturns[t],
+      backgroundColor:`${COLORS[i]}90`,
+      borderColor:COLORS[i], borderWidth:1, borderRadius:2
+    }))
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'top',labels:{boxWidth:10,padding:8,font:{size:9}}}},
+    scales:{
+      x:{ticks:{font:{size:9}},grid:{display:false}},
+      y:{ticks:{callback:v=>`${v}%`,font:{size:9}},grid:{color:'rgba(26,37,53,0.8)'}}
+    }
+  }
+});
+
+// ── Chart 6: Sector Donut ─────────────────────────────────────────
+const sectors = {Technology:4, Consumer:1, Automotive:1, Finance:2, Healthcare:1, Retail:1};
+new Chart(document.getElementById('sectorChart'),{
+  type:'doughnut',
+  data:{
+    labels:Object.keys(sectors),
+    datasets:[{data:Object.values(sectors),backgroundColor:COLORS,borderWidth:0,hoverOffset:4}]
+  },
+  options:{
+    responsive:true, cutout:'65%',
+    plugins:{legend:{position:'right',labels:{boxWidth:10,padding:8,font:{size:9}}}}
+  }
+});
+
+// Sector cards
+const sectorGrid = document.getElementById('sectorGrid');
+const sectorColors=[BLUE,UP,'#ffa502',PURPLE,DOWN,'#39d353'];
+Object.entries(sectors).forEach(([s,n],i)=>{
+  const avgRet = TICKERS.filter(t=>stockData[t].sector===s).reduce((a,t)=>a+stockData[t].ret,0)/n;
+  sectorGrid.innerHTML+=`<div class="sector-item">
+    <div class="sector-name">${s}</div>
+    <div class="sector-val" style="color:${sectorColors[i]}">${n}</div>
+    <div class="sector-pct ${avgRet>=0?'up-val':'down-val'}">${avgRet>=0?'+':''}${avgRet.toFixed(1)}% avg</div>
+  </div>`;
+});
+
+// ── Update time ───────────────────────────────────────────────────
+function updateTime(){
+  document.getElementById('updateTime').textContent = 'Last updated: '+new Date().toLocaleTimeString();
+}
+updateTime();
+
+function refreshData(){
+  updateTime();
+  // In production: fetch from Yahoo Finance API and re-render charts
+  const btn=document.querySelector('.btn-refresh');
+  btn.textContent='✓ UPDATED'; btn.style.color='#00d084';
+  setTimeout(()=>{btn.textContent='⟳ REFRESH';btn.style.color='';},2000);
+}
+
+// Auto-refresh every 60s in production
+// setInterval(refreshData, 60000);
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+ticker,ann_return,ann_vol,name,sharpe,last_price,change_pct
+AAPL,21.05,26.68,Apple Inc.,0.79,194.83,-1.13
+AMZN,-13.56,31.91,Amazon.com Inc.,-0.43,138.93,1.02
+GOOGL,12.16,27.25,Alphabet Inc.,0.45,164.94,-2.27
+JNJ,2.96,14.75,Johnson & Johnson,0.2,131.41,0.2
+JPM,8.56,27.89,JPMorgan Chase,0.31,176.3,2.05
+MSFT,38.96,21.49,Microsoft Corp.,1.81,509.14,-0.18
+NVDA,19.0,46.21,NVIDIA Corp.,0.41,817.4,3.22
+TSLA,17.72,47.48,Tesla Inc.,0.37,238.1,-1.01
+V,-20.15,21.15,Visa Inc.,-0.95,187.41,0.02
+WMT,24.69,11.66,Walmart Inc.,2.12,74.85,1.19
