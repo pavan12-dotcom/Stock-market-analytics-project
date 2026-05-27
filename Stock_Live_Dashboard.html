@@ -740,14 +740,29 @@ function renderDist(){
     type:'bar',
     data:{labels,datasets:[
       {label:'Returns',data:density,backgroundColor:'rgba(77,163,255,0.35)',borderColor:'rgba(77,163,255,0.6)',borderWidth:1,yAxisID:'y',order:2},
-      {label:'Normal',data:normPdf,type:'line',borderColor:'#d4e4f4',borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:'y',order:1},
+      {label:'Normal Dist',data:normPdf,type:'line',borderColor:'#d4e4f4',borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:'y',order:1},
     ]},
     options:{...CDEF,
       plugins:{...CDEF.plugins,
-        annotation:{annotations:{varLine:{type:'line',xMin:var95,xMax:var95,borderColor:C.red,borderWidth:1.5,borderDash:[4,3],label:{content:`VaR: ${var95}%`,enabled:true}}}},
         tooltip:{...CDEF.plugins.tooltip,mode:'index'}
       }
-    }
+    },
+    plugins:[{afterDatasetsDraw(ch){
+      const ctx=ch.ctx, xScale=ch.scales.x;
+      if(!xScale) return;
+      // Find closest label index to var95
+      let closest=0, minD=Infinity;
+      labels.forEach((l,i)=>{const d=Math.abs(l-var95); if(d<minD){minD=d;closest=i;}});
+      const xPx=xScale.getPixelForValue(labels[closest]);
+      const yTop=ch.chartArea.top, yBot=ch.chartArea.bottom;
+      ctx.save();
+      ctx.strokeStyle=C.red; ctx.lineWidth=2; ctx.setLineDash([5,4]);
+      ctx.beginPath(); ctx.moveTo(xPx,yTop); ctx.lineTo(xPx,yBot); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle=C.red; ctx.font='bold 9px IBM Plex Mono';
+      ctx.fillText(`VaR: ${var95}%`, xPx+4, yTop+14);
+      ctx.restore();
+    }}]
   });
 }
 
@@ -834,13 +849,16 @@ function renderRollVol(){
   if(!document.getElementById('rollVolChart')) return;
   destroy('rollVol');
   const datasets=[];
+  // Use full history dates as label base (not sliced)
+  const baseDates=HISTORY[TICKERS[0]].dates;
   TICKERS.slice(0,6).forEach((t,i)=>{
-    const s=getSlice(t); const rv=EX[t]?.roll_vol?.slice(s.startIdx)||[];
-    datasets.push({label:t,data:rv,borderColor:C.stocks[i],borderWidth:1.5,pointRadius:0,spanGaps:true,tension:0.3});
+    const rv=(EX[t]?.roll_vol)||[];
+    // Pad with nulls at front if shorter than baseDates
+    const padded=rv.length>0 ? Array(Math.max(0,baseDates.length-rv.length)).fill(null).concat(rv) : [];
+    datasets.push({label:t,data:padded,borderColor:C.stocks[i],borderWidth:1.5,pointRadius:0,spanGaps:true,tension:0.3});
   });
-  const dates=getSlice(TICKERS[0]).dates;
   charts.rollVol=new Chart(document.getElementById('rollVolChart').getContext('2d'),{
-    type:'line',data:{labels:dates,datasets},
+    type:'line',data:{labels:baseDates,datasets},
     options:{...CDEF,scales:{x:CDEF.scales.x,y:{...CDEF.scales.y,ticks:{...CDEF.scales.y.ticks,callback:v=>v+'%'}}}}
   });
 }
@@ -1024,27 +1042,41 @@ function renderMC(){
   const lastDate=HISTORY[t].dates[HISTORY[t].dates.length-1];
   const lastPrice=closes[closes.length-1];
 
-  // Future dates (30 trading days)
+  // Get MC data from enriched (already 30 points from Python)
+  const p10Raw=ex.mc_p10||[];
+  const p50Raw=ex.mc_p50||[];
+  const p90Raw=ex.mc_p90||[];
+
+  // Build future trading-day labels to match data length
+  const dataLen=Math.max(p50Raw.length,30);
   const futureDates=['NOW'];
   const d=new Date(lastDate);
-  while(futureDates.length < 30){
+  while(futureDates.length<dataLen){
     d.setDate(d.getDate()+1);
     if(d.getDay()!==0&&d.getDay()!==6) futureDates.push(d.toISOString().slice(0,10));
   }
-  const n=futureDates.length;
-  const p10=ex.mc_p10?.slice(0,n)||[];
-  const p50=ex.mc_p50?.slice(0,n)||[];
-  const p90=ex.mc_p90?.slice(0,n)||[];
+
+  // Prepend current price as day-0 anchor
+  const p10=[lastPrice,...p10Raw.slice(0,futureDates.length-1)];
+  const p50=[lastPrice,...p50Raw.slice(0,futureDates.length-1)];
+  const p90=[lastPrice,...p90Raw.slice(0,futureDates.length-1)];
 
   document.getElementById('mcTicker').textContent=t;
   charts.mc=new Chart(document.getElementById('mcChart').getContext('2d'),{
     type:'line',
     data:{labels:futureDates,datasets:[
-      {label:'90th Pct (Bull)',data:p90,borderColor:C.green,borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[4,3]},
+      {label:'90th Pct (Bull)',data:p90,borderColor:C.green,borderWidth:1.5,pointRadius:0,
+       fill:{target:1,above:'rgba(0,208,132,0.08)'},tension:0.3,borderDash:[4,3]},
       {label:'Median (P50)',data:p50,borderColor:C.blue,borderWidth:2.5,pointRadius:0,fill:false,tension:0.3},
-      {label:'10th Pct (Bear)',data:p10,borderColor:C.red,borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[4,3]},
+      {label:'10th Pct (Bear)',data:p10,borderColor:C.red,borderWidth:1.5,pointRadius:0,
+       fill:{target:1,below:'rgba(255,77,106,0.08)'},tension:0.3,borderDash:[4,3]},
     ]},
-    options:{...CDEF,scales:{x:CDEF.scales.x,y:{...CDEF.scales.y,ticks:{...CDEF.scales.y.ticks,callback:v=>`$${v}`}}}}
+    options:{...CDEF,
+      plugins:{...CDEF.plugins,
+        tooltip:{...CDEF.plugins.tooltip,callbacks:{label:ctx=>`  ${ctx.dataset.label}: $${ctx.raw?.toFixed(2)||'—'}`}}
+      },
+      scales:{x:CDEF.scales.x,y:{...CDEF.scales.y,ticks:{...CDEF.scales.y.ticks,callback:v=>`$${v}`}}}
+    }
   });
   if(p50.length&&p10.length&&p90.length){
     const lastP50=p50[p50.length-1], lastP10=p10[p10.length-1], lastP90=p90[p90.length-1];
