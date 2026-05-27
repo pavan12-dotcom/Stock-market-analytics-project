@@ -1,11 +1,11 @@
 ticker,ann_return,ann_vol,name,sharpe,last_price,change_pct
-AAPL,21.05,26.68,Apple Inc.,0.79,194.83,-1.13
-AMZN,-13.56,31.91,Amazon.com Inc.,-0.43,138.93,1.02
-GOOGL,12.16,27.25,Alphabet Inc.,0.45,164.94,-2.27
-JNJ,2.96,14.75,Johnson & Johnson,0.2,131.41,0.2
-JPM,8.56,27.89,JPMorgan Chase,0.31,176.3,2.05
-MSFT,38.96,21.49,Microsoft Corp.,1.81,509.14,-0.18
-NVDA,19.0,46.21,NVIDIA Corp.,0.41,817.4,3.22
-TSLA,17.72,47.48,Tesla Inc.,0.37,238.1,-1.01
-V,-20.15,21.15,Visa Inc.,-0.95,187.41,0.02
-WMT,24.69,11.66,Walmart Inc.,2.12,74.85,1.19
+AAPL,34.94,24.09,Apple Inc.,1.45,308.33,-0.16
+AMZN,39.98,30.25,"Amazon.com, Inc.",1.32,265.29,-0.39
+GOOGL,59.87,30.63,Alphabet Inc.,1.95,388.88,1.54
+JNJ,28.54,17.12,Johnson & Johnson,1.67,230.18,-1.78
+JPM,-9.64,24.12,JPMorgan Chase & Co.,-0.4,306.74,0.12
+MSFT,-33.31,31.45,Microsoft Corporation,-1.06,416.03,-0.61
+NVDA,42.7,36.72,NVIDIA Corporation,1.16,214.86,-0.22
+TSLA,-1.79,39.0,"Tesla, Inc.",-0.05,433.59,1.78
+V,-15.1,25.2,Visa Inc.,-0.6,326.48,-0.73
+WMT,19.66,27.62,Walmart Inc.,0.71,118.57,-1.41

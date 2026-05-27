@@ -6,7 +6,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.drawing.image import Image as XLImage
 import os
 
-BASE = '/home/claude/stock_project'
+BASE = os.path.dirname(os.path.abspath(__file__))
 df      = pd.read_csv(f'{BASE}/data/stock_history.csv', parse_dates=['date'])
 stats   = pd.read_csv(f'{BASE}/data/stock_stats.csv')
 snap    = pd.read_csv(f'{BASE}/data/latest_snapshot.csv')
