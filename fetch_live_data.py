@@ -49,8 +49,13 @@ class AlphaVantageAPI:
         self.base_url = 'https://www.alphavantage.co/query'
         self.call_count = 0
         
-    def fetch_daily(self, ticker, outputsize='compact'):
-        """Fetch daily prices (5 calls per minute limit on free tier)"""
+    def fetch_daily(self, ticker, outputsize='full'):
+        """Fetch daily prices (5 calls per minute limit on free tier)
+        
+        Args:
+            ticker: Stock symbol (e.g., 'AAPL')
+            outputsize: 'compact' (100 days) or 'full' (20+ years, ~1260 trading days per year)
+        """
         if not self.api_key:
             raise ValueError("Alpha Vantage API key not found. Set ALPHA_VANTAGE_API_KEY env var.")
         
@@ -61,7 +66,7 @@ class AlphaVantageAPI:
         params = {
             'function': 'TIME_SERIES_DAILY',
             'symbol': ticker,
-            'outputsize': outputsize,
+            'outputsize': outputsize,  # 'full' = ~20+ years of data
             'apikey': self.api_key
         }
         
@@ -201,18 +206,25 @@ def main():
     if provider in ['auto', 'alpha']:
         api_key = os.getenv('ALPHA_VANTAGE_API_KEY')
         if api_key:
-            print("\n🔷 Using Alpha Vantage API...")
+            print("\n🔷 Using Alpha Vantage API (FULL DATA - Past 5+ Years)...")
             av = AlphaVantageAPI()
             all_dfs = []
             
             for ticker in TICKERS:
-                ticker_df = av.fetch_daily(ticker)
+                # Use 'full' to get all available historical data (20+ years)
+                ticker_df = av.fetch_daily(ticker, outputsize='full')
                 if ticker_df is not None:
                     all_dfs.append(ticker_df)
             
             if all_dfs:
                 df = pd.concat(all_dfs, ignore_index=True)
                 df['date'] = pd.to_datetime(df['date'])
+                
+                # Filter to past 1 year from today
+                one_year_ago = datetime.now() - timedelta(days=365)
+                df = df[df['date'] >= one_year_ago]
+                
+                print(f"   ✓ Filtered to past 1 year: {df['date'].min().date()} to {df['date'].max().date()}")
                 # Add company info from Yahoo as fallback
                 try:
                     import yfinance as yf
