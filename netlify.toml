@@ -21,6 +21,23 @@
   directory = "functions"
   node_bundler = "esbuild"
 
+# HTML files — always revalidate (never serve stale dashboard)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# live_data.js — always fresh (data changes on every push)
+[[headers]]
+  for = "/data/live_data.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Content-Type = "application/javascript"
+
+# All other static files — cache for 1 hour
 [[headers]]
   for = "/*"
   [headers.values]
