@@ -4,13 +4,13 @@
 
 ### An end-to-end data analytics platform for 10 major US equities with live data, interactive dashboard, portfolio optimization & Excel reporting.
 
-[![Live Dashboard](https://img.shields.io/badge/🚀%20Live%20Dashboard-Visit%20Now-blueviolet?style=for-the-badge)](https://stock-analysis-dashboards.netlify.app)
+[![Live Dashboard](https://img.shields.io/badge/🚀%20Live%20Dashboard-Visit%20Now-blueviolet?style=for-the-badge)](https://pavan12-dotcom.github.io/Stock-market-analytics-project/)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/pavan12-dotcom/Stock-market-analytics-project)
 
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)
 ![Yahoo Finance](https://img.shields.io/badge/Data-Yahoo%20Finance%20API-6001D2?style=flat)
 ![Chart.js](https://img.shields.io/badge/Dashboard-Chart.js%204.4-FF6384?style=flat)
-![Netlify](https://img.shields.io/badge/Deployed-Netlify-00C7B7?style=flat&logo=netlify)
+![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-222222?style=flat&logo=github)
 ![Excel](https://img.shields.io/badge/Report-Excel%205--Tab-217346?style=flat&logo=microsoft-excel)
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-00d084?style=flat)
 
@@ -63,9 +63,9 @@ This platform solves a real-world data analyst challenge: **no single tool combi
 
 ## 🚀 Live Demo
 
-> **[https://stock-analysis-dashboards.netlify.app](https://stock-analysis-dashboards.netlify.app)**
+> **[https://pavan12-dotcom.github.io/Stock-market-analytics-project/](https://pavan12-dotcom.github.io/Stock-market-analytics-project/)**
 
-- ✅ Fully deployed on Netlify, auto-deploys on every GitHub push
+- ✅ Hosted entirely on GitHub Pages, auto-updates on every repository push
 - ✅ Real data from Yahoo Finance — last 1 year of trading history
 - ✅ No login required — open and explore immediately
 
@@ -126,7 +126,7 @@ This platform solves a real-world data analyst challenge: **no single tool combi
 | **Visualization (Python)** | `matplotlib`, `seaborn` |
 | **Dashboard** | Vanilla HTML5 + CSS3 + Chart.js 4.4 |
 | **Fonts** | IBM Plex Mono, IBM Plex Sans (Google Fonts) |
-| **Deployment** | Netlify (auto-deploy from GitHub) |
+| **Deployment** | GitHub Pages (auto-deploy from GitHub repository) |
 | **Excel Report** | `openpyxl` with conditional formatting |
 | **Scheduling** | Python `schedule` library |
 
@@ -308,23 +308,28 @@ min_variance_portfolio = argmin(volatilities)
 
 ## 🚀 Deployment
 
-The dashboard auto-deploys to Netlify on every `git push`:
+The dashboard is deployed completely free using **GitHub Pages** directly from the repository code. 
 
 ```
 git push origin main
     │
-    ▼  (GitHub webhook → Netlify)
-Netlify CDN
+    ▼ (Trigger GitHub Pages Action)
+GitHub Pages CDN
     │
-    ├── Serves Stock_Live_Dashboard.html (no-cache)
-    ├── Serves data/live_data.js (no-cache)
-    └── Static assets (1h cache)
+    ├── Serves index.html (immediate redirect)
+    ├── Serves Stock_Live_Dashboard.html (main dashboard UI)
+    └── Serves data/live_data.js (holds latest live stock data)
 ```
 
-**Cache Strategy** (`netlify.toml`):
-- `*.html` → `no-cache` (always fresh)
-- `data/live_data.js` → `no-cache` (data changes on push)
-- Everything else → `max-age=3600` (1h CDN cache)
+### How to Enable GitHub Pages (One-time Setup)
+1. Go to your GitHub repository: [pavan12-dotcom/Stock-market-analytics-project](https://github.com/pavan12-dotcom/Stock-market-analytics-project)
+2. Click **Settings** ⚙️ on the top menu.
+3. On the left sidebar, click **Pages** under the "Code and automation" section.
+4. Under **Build and deployment**:
+   - **Source**: Select `Deploy from a branch`.
+   - **Branch**: Select `main` and folder `/ (root)`.
+5. Click **Save** 💾.
+6. Within 1-2 minutes, your dashboard will be live at: **`https://pavan12-dotcom.github.io/Stock-market-analytics-project/`**
 
 ---
 
@@ -372,8 +377,8 @@ RF_RATE = 0.0525  # 5.25% US T-bill (update as needed)
 
 **Built with ❤️ for Data Analytics portfolios**
 
-[![Live Demo](https://img.shields.io/badge/🚀%20View%20Live%20Dashboard-stock--analysis--dashboards.netlify.app-blueviolet?style=for-the-badge)](https://stock-analysis-dashboards.netlify.app)
+[![Live Demo](https://img.shields.io/badge/🚀%20View%20Live%20Dashboard-pavan12--dotcom.github.io-blueviolet?style=for-the-badge)](https://pavan12-dotcom.github.io/Stock-market-analytics-project/)
 
-*Python · Yahoo Finance · Chart.js · Netlify · Excel*
+*Python · Yahoo Finance · Chart.js · GitHub Pages · Excel*
 
 </div>
