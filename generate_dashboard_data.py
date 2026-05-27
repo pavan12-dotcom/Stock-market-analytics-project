@@ -262,18 +262,126 @@ def generate_live_data_js(stock_metrics, df, output_path):
     for ticker in TICKERS:
         ticker_data = df_history[df_history['ticker'] == ticker].sort_values('date')
         histories[ticker] = [round(float(p), 2) for p in ticker_data['close'].values]
+        
+    # Enriched data (ma50, ma200, roll_vol, crosses, mc_p10, mc_p50, mc_p90)
+    enriched_data = {}
+    for ticker in TICKERS:
+        ticker_df = df_history[df_history['ticker'] == ticker].sort_values('date').copy()
+        
+        # Calculate MA50 and MA200 with min_periods=1 to avoid NaNs at start
+        ma50 = ticker_df['close'].rolling(50, min_periods=1).mean().round(2).tolist()
+        ma200 = ticker_df['close'].rolling(200, min_periods=1).mean().round(2).tolist()
+        
+        # Crosses
+        crosses = []
+        for idx in range(1, len(ticker_df)):
+            p50, p200 = ma50[idx-1], ma200[idx-1]
+            c50, c200 = ma50[idx], ma200[idx]
+            if p50 <= p200 and c50 > c200:
+                crosses.append({'date': ticker_df.iloc[idx]['date'].strftime('%Y-%m-%d'), 'type': 'golden'})
+            elif p50 >= p200 and c50 < c200:
+                crosses.append({'date': ticker_df.iloc[idx]['date'].strftime('%Y-%m-%d'), 'type': 'death'})
+                
+        # Roll Vol
+        ticker_df['daily_ret'] = ticker_df['close'].pct_change()
+        roll_vol = (ticker_df['daily_ret'].rolling(30, min_periods=1).std() * np.sqrt(252) * 100).fillna(0).round(2).tolist()
+        
+        # Monte Carlo
+        daily_mean = ticker_df['daily_ret'].mean()
+        daily_vol = ticker_df['daily_ret'].std()
+        if pd.isna(daily_mean) or pd.isna(daily_vol) or daily_vol == 0:
+            daily_mean = 0.0004
+            daily_vol = 0.015
+            
+        last_price = ticker_df.iloc[-1]['close']
+        sims = np.zeros((30, 200))
+        sims[0, :] = last_price
+        for t in range(1, 30):
+            sims[t, :] = sims[t-1, :] * np.exp(np.random.normal(daily_mean - 0.5 * daily_vol**2, daily_vol, 200))
+            
+        mc_p10 = np.percentile(sims, 10, axis=1).round(2).tolist()
+        mc_p50 = np.percentile(sims, 50, axis=1).round(2).tolist()
+        mc_p90 = np.percentile(sims, 90, axis=1).round(2).tolist()
+        
+        enriched_data[ticker] = {
+            "ma50": ma50,
+            "ma200": ma200,
+            "crosses": crosses,
+            "roll_vol": roll_vol,
+            "mc_p10": mc_p10,
+            "mc_p50": mc_p50,
+            "mc_p90": mc_p90
+        }
+        
+    # Portfolio stats & weights optimization
+    print("💼 Performing portfolio optimization...")
+    rets_pivot = df_history.pivot(index='date', columns='ticker', values='close').pct_change().dropna()
+    cov_matrix = rets_pivot.cov() * 252
+    mean_returns = rets_pivot.mean() * 252
+    
+    num_portfolios = 5000
+    results = np.zeros((3, num_portfolios))
+    weights_record = []
+    
+    for i in range(num_portfolios):
+        wts = np.random.random(len(TICKERS))
+        wts /= np.sum(wts)
+        weights_record.append(wts)
+        p_ret = np.dot(wts, mean_returns)
+        p_vol = np.sqrt(np.dot(wts.T, np.dot(cov_matrix, wts)))
+        p_sharpe = (p_ret - RF_RATE) / p_vol if p_vol > 0 else 0
+        results[0,i] = p_ret
+        results[1,i] = p_vol
+        results[2,i] = p_sharpe
+        
+    # Max Sharpe
+    max_sharpe_idx = np.argmax(results[2])
+    max_sharpe_w = weights_record[max_sharpe_idx]
+    max_sharpe_ret = results[0, max_sharpe_idx] * 100
+    max_sharpe_vol = results[1, max_sharpe_idx] * 100
+    max_sharpe_sr = results[2, max_sharpe_idx]
+    
+    # Min Variance
+    min_vol_idx = np.argmin(results[1])
+    min_vol_w = weights_record[min_vol_idx]
+    min_vol_ret = results[0, min_vol_idx] * 100
+    min_vol_vol = results[1, min_vol_idx] * 100
+    min_vol_sr = results[2, min_vol_idx]
+    
+    # Equal Weight
+    equal_w = np.ones(len(TICKERS)) / len(TICKERS)
+    equal_ret = np.dot(equal_w, mean_returns) * 100
+    equal_vol = np.sqrt(np.dot(equal_w.T, np.dot(cov_matrix, equal_w))) * 100
+    equal_sr = (equal_ret/100 - RF_RATE) / (equal_vol/100)
+    
+    portfolios_data = [
+        {"Portfolio": "Equal Weight", "Ann Ret %": round(equal_ret, 2), "Ann Vol %": round(equal_vol, 2), "Sharpe": round(equal_sr, 2)},
+        {"Portfolio": "Max Sharpe", "Ann Ret %": round(max_sharpe_ret, 2), "Ann Vol %": round(max_sharpe_vol, 2), "Sharpe": round(max_sharpe_sr, 2)},
+        {"Portfolio": "Min Variance", "Ann Ret %": round(min_vol_ret, 2), "Ann Vol %": round(min_vol_vol, 2), "Sharpe": round(min_vol_sr, 2)},
+        {"Portfolio": "SPY Benchmark", "Ann Ret %": 8.58, "Ann Vol %": 9.39, "Sharpe": 0.35}
+    ]
+    
+    weights_data = {}
+    for i, ticker in enumerate(TICKERS):
+        weights_data[ticker] = {
+            "equal": round(100.0 / len(TICKERS), 1),
+            "max_sharpe": round(max_sharpe_w[i] * 100, 1),
+            "min_variance": round(min_vol_w[i] * 100, 1)
+        }
     
     # Build the JavaScript object
     live_data = {
         'lastUpdated': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'stockData': stock_data,
         'dateLabels': date_labels,
-        'histories': histories
+        'histories': histories,
+        'enriched': enriched_data,
+        'weights': weights_data,
+        'portfolios': portfolios_data
     }
     
     # Generate JavaScript file
-    js_content = f"""window.LIVE_DATA = {json.dumps(live_data, indent=2)};
-"""
+    js_content = f"window.LIVE_DATA = {json.dumps(live_data, indent=2)};\n"
     
     with open(output_path, 'w') as f:
         f.write(js_content)

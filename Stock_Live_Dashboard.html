@@ -403,13 +403,13 @@ if (typeof LIVE_DATA !== 'undefined' && LIVE_DATA.stockData) {
     stats: {},
     sectors: {},
     names: {},
-    portfolios: [
+    portfolios: data.portfolios || [
       { Portfolio: 'Equal Weight', 'Ann Ret %': 28.5, Sharpe: 1.42 },
       { Portfolio: 'Max Sharpe', 'Ann Ret %': 35.2, Sharpe: 1.98 },
       { Portfolio: 'Min Variance', 'Ann Ret %': 18.4, Sharpe: 1.12 }
     ],
-    weights: { equal: {}, max_sharpe: {}, min_variance: {} },
-    enriched: {}
+    weights: {},
+    enriched: data.enriched || {}
   };
   
   tickers.forEach(ticker => {
@@ -439,7 +439,15 @@ if (typeof LIVE_DATA !== 'undefined' && LIVE_DATA.stockData) {
       cvar_95: Math.abs(stock.vol) * 0.3
     };
     
-    RAW_FROM_LIVE.weights.equal[ticker] = { equal: Math.round(100 / tickers.length) };
+    if (data.weights && data.weights[ticker]) {
+      RAW_FROM_LIVE.weights[ticker] = data.weights[ticker];
+    } else {
+      RAW_FROM_LIVE.weights[ticker] = {
+        equal: Math.round(100 / tickers.length),
+        max_sharpe: Math.round(100 / tickers.length),
+        min_variance: Math.round(100 / tickers.length)
+      };
+    }
   });
   
   // Will be redefined below - this ensures we use live data
