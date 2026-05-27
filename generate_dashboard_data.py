@@ -247,19 +247,20 @@ def generate_live_data_js(stock_metrics, df, output_path):
     # Stock data
     stock_data = {}
     for _, row in stock_metrics.iterrows():
-        stock_data[row['ticker']] = {
-            'name': row['name'],
-            'sector': row['sector'],
-            'price': round(row['close'], 2),
-            'chg': round(row['change_pct'], 2),
-            'ret': round(row['ann_return_pct'], 2),
-            'vol': round(row['ann_vol'], 2),
-            'sharpe': round(row['sharpe'], 2)
-        }
+        if row['ticker'] in TICKERS:
+            stock_data[row['ticker']] = {
+                'name': row['name'],
+                'sector': row['sector'],
+                'price': round(row['close'], 2),
+                'chg': round(row['change_pct'], 2),
+                'ret': round(row['ann_return_pct'], 2),
+                'vol': round(row['ann_vol'], 2),
+                'sharpe': round(row['sharpe'], 2)
+            }
     
-    # History data for each ticker
+    # History data for each ticker (including SPY benchmark)
     histories = {}
-    for ticker in TICKERS:
+    for ticker in TICKERS + ['SPY']:
         ticker_data = df_history[df_history['ticker'] == ticker].sort_values('date')
         histories[ticker] = [round(float(p), 2) for p in ticker_data['close'].values]
         
@@ -315,7 +316,8 @@ def generate_live_data_js(stock_metrics, df, output_path):
         
     # Portfolio stats & weights optimization
     print("💼 Performing portfolio optimization...")
-    rets_pivot = df_history.pivot(index='date', columns='ticker', values='close').pct_change().dropna()
+    holdings_history = df_history[df_history['ticker'].isin(TICKERS)]
+    rets_pivot = holdings_history.pivot(index='date', columns='ticker', values='close').pct_change().dropna()
     cov_matrix = rets_pivot.cov() * 252
     mean_returns = rets_pivot.mean() * 252
     
@@ -388,6 +390,31 @@ def generate_live_data_js(stock_metrics, df, output_path):
     
     print(f"✓ Generated {output_path}")
 
+def fetch_spy_history(start, end):
+    """Fetch SPY benchmark history from Yahoo Finance"""
+    print("🔷 Fetching SPY benchmark history from Yahoo Finance...")
+    try:
+        import yfinance as yf
+        raw = yf.download('SPY', start=start, end=end, auto_adjust=True, progress=False)
+        if raw.empty:
+            raise ValueError("Empty S&P 500 (SPY) ETF history fetched.")
+            
+        spy_df = raw['Close'].reset_index()
+        # Handle MultiIndex columns if any
+        if isinstance(spy_df.columns, pd.MultiIndex):
+            spy_df.columns = spy_df.columns.get_level_values(0)
+            
+        spy_df.columns = ['date', 'close']
+        spy_df['ticker'] = 'SPY'
+        spy_df['name'] = 'SPDR S&P 500 ETF Trust'
+        spy_df['sector'] = 'Financials'
+        spy_df['beta'] = 1.0
+        print(f"✓ Fetched {len(spy_df)} rows for SPY benchmark")
+        return spy_df
+    except Exception as e:
+        print(f"⚠️ Warning: Could not fetch SPY benchmark: {e}")
+        return None
+
 def main():
     provider = 'yahoo'  # Default to Yahoo Finance (more reliable)
     if '--provider' in sys.argv:
@@ -417,6 +444,13 @@ def main():
     if df is None:
         print("\n❌ Could not fetch data from any source")
         sys.exit(1)
+    
+    # Fetch SPY benchmark history
+    start_date = df['date'].min()
+    end_date = df['date'].max()
+    spy_df = fetch_spy_history(start_date, end_date)
+    if spy_df is not None:
+        df = pd.concat([df, spy_df], ignore_index=True)
     
     # Filter to past 1 year
     one_year_ago = datetime.now() - timedelta(days=365)

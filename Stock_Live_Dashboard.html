@@ -449,6 +449,13 @@ if (typeof LIVE_DATA !== 'undefined' && LIVE_DATA.stockData) {
       };
     }
   });
+
+  if (data.histories && data.histories['SPY']) {
+    RAW_FROM_LIVE.history['SPY'] = {
+      dates: data.dateLabels,
+      closes: data.histories['SPY']
+    };
+  }
   
   // Will be redefined below - this ensures we use live data
   var RAW = RAW_FROM_LIVE;
@@ -1020,7 +1027,7 @@ function renderMC(){
   // Future dates (30 trading days)
   const futureDates=['NOW'];
   const d=new Date(lastDate);
-  for(let i=0;i<30;i++){
+  while(futureDates.length < 30){
     d.setDate(d.getDate()+1);
     if(d.getDay()!==0&&d.getDay()!==6) futureDates.push(d.toISOString().slice(0,10));
   }
