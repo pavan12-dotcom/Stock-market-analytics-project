@@ -1,190 +1,379 @@
+<div align="center">
+
 # 📈 Real-Time Stock Market Analytics Platform
 
-[![GitHub Repo](https://img.shields.shields.shields.shields.io/badge/GitHub-Repository-blue?style=flat&logo=github&logoColor=white)](https://github.com/pavan12-dotcom/Stock-market-analytics-project)
-[![GitHub Stars](https://img.shields.shields.shields.shields.io/github/stars/pavan12-dotcom/Stock-market-analytics-project?style=flat)](https://github.com/pavan12-dotcom/Stock-market-analytics-project/stargazers)
-[![GitHub Forks](https://img.shields.shields.shields.shields.io/github/forks/pavan12-dotcom/Stock-market-analytics-project?style=flat)](https://github.com/pavan12-dotcom/Stock-market-analytics-project/network/members)
-![Python](https://img.shields.shields.shields.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)
-![Yahoo Finance](https://img.shields.shields.shields.shields.io/badge/Data-Yahoo%20Finance%20API-6001D2?style=flat)
-![Excel](https://img.shields.shields.shields.shields.io/badge/Report-Excel%205--Tab-217346?style=flat&logo=microsoft-excel&logoColor=white)
-![Chart.js](https://img.shields.shields.shields.shields.io/badge/Dashboard-Chart.js-FF6384?style=flat)
-![Status](https://img.shields.shields.shields.shields.io/badge/Status-Production%20Ready-00d084?style=flat)
+### An end-to-end data analytics platform for 10 major US equities with live data, interactive dashboard, portfolio optimization & Excel reporting.
 
-An end-to-end Data Analyst project that tracks **10 major stocks** (AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, JPM, JNJ, V, WMT) with live data from Yahoo Finance — delivering a Python analysis pipeline, interactive HTML dashboard, and a professional Excel report.
+[![Live Dashboard](https://img.shields.io/badge/🚀%20Live%20Dashboard-Visit%20Now-blueviolet?style=for-the-badge)](https://stock-analysis-dashboards.netlify.app)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/pavan12-dotcom/Stock-market-analytics-project)
 
----
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)
+![Yahoo Finance](https://img.shields.io/badge/Data-Yahoo%20Finance%20API-6001D2?style=flat)
+![Chart.js](https://img.shields.io/badge/Dashboard-Chart.js%204.4-FF6384?style=flat)
+![Netlify](https://img.shields.io/badge/Deployed-Netlify-00C7B7?style=flat&logo=netlify)
+![Excel](https://img.shields.io/badge/Report-Excel%205--Tab-217346?style=flat&logo=microsoft-excel)
+![Status](https://img.shields.io/badge/Status-Production%20Ready-00d084?style=flat)
 
-[![Live Dashboard](https://img.shields.shields.shields.shields.io/badge/Live-Dashboard-blueviolet?style=flat&logo=netlify&logoColor=white)](https://stock-analysis-dashboards.netlify.app)
-[![GitHub Repo](https://img.shields.shields.shields.shields.io/badge/View_on-GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/pavan12-dotcom/Stock-market-analytics-project)
-
-## 📋 Problem Statement
-
-### Background
-Individual investors and financial analysts face a significant challenge in today's fast-moving stock market — **data is scattered, hard to interpret, and rarely presented in a way that drives actionable decisions**. Most people can see a stock price, but very few can quickly answer:
-
-- *Which stock gives the best return for the risk taken?*
-- *Are my stocks moving together (poor diversification) or independently?*
-- *Which months historically perform best for each stock?*
-- *Is a stock's recent performance driven by momentum or just noise?*
-
-### Problem
-> **There is no single, unified platform that combines live stock data, risk-return analysis, correlation insights, and performance tracking — in a format accessible to both technical analysts and business stakeholders.**
-
-Specifically:
-- Raw stock data from APIs is **unstructured and hard to analyse**
-- Existing tools are either too expensive (Bloomberg) or too basic (Google Finance)
-- Analysts waste hours manually pulling data into Excel every day
-- Risk metrics like Sharpe Ratio and Volatility are rarely visualised together
-- No single report serves both a **data analyst** (Python/SQL) and a **manager** (Excel/dashboard)
-
-### Solution
-Build an **end-to-end Real-Time Stock Market Analytics Platform** that:
-
-1. **Automatically fetches** live price data from Yahoo Finance API
-2. **Cleans and structures** it into analysis-ready datasets
-3. **Calculates key metrics** — Annualised Return, Volatility, Sharpe Ratio, Correlations
-4. **Visualises insights** through 6 Python charts + 1 interactive HTML dashboard
-5. **Delivers a stakeholder report** via a 5-tab formatted Excel workbook
-
-### Target Users
-| User | What They Get |
-|---|---|
-| **Data Analyst** | Python scripts, CSVs, risk metrics, correlation matrix |
-| **Portfolio Manager** | Excel report with risk-return table and monthly heatmap |
-| **Business Stakeholder** | HTML live dashboard with KPIs and ticker tape |
-| **Developer** | Clean, documented, GitHub-ready codebase |
-
-### Key Questions Answered
-1. Which stock has the **best risk-adjusted return** (Sharpe Ratio)?
-2. Which stocks are **highly correlated** — reducing portfolio diversification?
-3. What are the **seasonal patterns** in monthly returns?
-4. Which stocks are **high risk vs low risk** based on annualised volatility?
-5. How does each stock's **performance trend** over a rolling 30-day window?
-
-### Impact
-- Saves **2–3 hours daily** of manual data collection
-- Enables **data-driven portfolio decisions** instead of gut-feel investing
-- Provides a **reusable pipeline** — just run `fetch_live_data.py` each morning for fresh data
-- Demonstrates **full-stack data analyst skills**: API → Python → SQL-ready → Excel → Dashboard
+</div>
 
 ---
 
-## 🗂 Project Structure
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Live Demo](#-live-demo)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Dashboard Tabs](#-dashboard-tabs)
+- [Analytics Metrics](#-analytics-metrics)
+- [Charts](#-charts)
+- [Quick Start](#-quick-start)
+- [Data Pipeline](#-data-pipeline)
+- [Portfolio Optimization](#-portfolio-optimization)
+- [Deployment](#-deployment)
+- [Configuration](#-configuration)
+
+---
+
+## 🎯 Overview
+
+This platform solves a real-world data analyst challenge: **no single tool combines live stock prices, risk metrics, portfolio optimization, and visual reporting in one place**.
+
+> Built for Data Analyst portfolios — demonstrating Python EDA, financial statistics, interactive visualization, and cloud deployment.
+
+**Tracks 10 major US equities:**
+
+| Ticker | Company | Sector |
+|--------|---------|--------|
+| AAPL | Apple Inc. | Technology |
+| MSFT | Microsoft Corporation | Technology |
+| GOOGL | Alphabet Inc. | Communication Services |
+| AMZN | Amazon.com Inc. | Consumer Cyclical |
+| TSLA | Tesla Inc. | Consumer Cyclical |
+| NVDA | NVIDIA Corporation | Technology |
+| JPM | JPMorgan Chase & Co. | Financial Services |
+| JNJ | Johnson & Johnson | Healthcare |
+| V | Visa Inc. | Financial Services |
+| WMT | Walmart Inc. | Consumer Defensive |
+
+**+ SPY** (S&P 500 ETF) as benchmark
+
+---
+
+## 🚀 Live Demo
+
+> **[https://stock-analysis-dashboards.netlify.app](https://stock-analysis-dashboards.netlify.app)**
+
+- ✅ Fully deployed on Netlify, auto-deploys on every GitHub push
+- ✅ Real data from Yahoo Finance — last 1 year of trading history
+- ✅ No login required — open and explore immediately
+
+---
+
+## ✨ Features
+
+### 📊 Interactive Dashboard (HTML + Chart.js)
+- **4 Tab System** — Overview, Risk Analytics, Portfolio, Monte Carlo
+- **KPI Strip** — Live price, daily change, annualised return, volatility, Sharpe, Max Drawdown
+- **Price Chart** — Candlestick-style with MA50/MA200 overlays + SPY benchmark
+- **Timeframe Selector** — 1M / 3M / 6M / 1Y view
+- **Insight Ticker** — Auto-scrolling AI-style market insights
+
+### 📉 Risk Analytics
+- Drawdown timeline chart
+- Rolling 30-Day Volatility
+- VaR 95% vs CVaR 95% comparison bar chart
+- Risk metrics heatmap across all stocks
+
+### 💼 Portfolio Optimization
+- **Max Sharpe Ratio** portfolio (Monte Carlo simulation — 5,000 portfolios)
+- **Min Variance** portfolio
+- **Equal Weight** benchmark
+- **Custom Portfolio Builder** — drag sliders to set your own allocation in real-time
+- Strategy comparison bar chart
+
+### 🎲 Monte Carlo Simulation
+- 200 simulation paths × 30 future trading days
+- P10 / P50 / P90 forecast bands
+- Per-stock forecast with current price as anchor
+
+### 📈 Python Analysis (6 Charts)
+1. Normalised Performance (100-indexed)
+2. Monthly Returns Heatmap
+3. Risk vs Return Scatter
+4. Correlation Matrix Heatmap
+5. Price + Volume Timeline
+6. Rolling 30-Day Sharpe Ratio
+
+### 📑 Excel Report (5-Tab Workbook)
+| Tab | Content |
+|-----|---------|
+| Summary | Price, returns, risk metrics for all 10 stocks |
+| Monthly Returns | Pivot heatmap by month |
+| Risk Analysis | Sharpe, Sortino, Calmar, VaR, CVaR, Max Drawdown |
+| Correlation | Full 10×10 correlation matrix |
+| Raw Data | Cleaned daily OHLCV data |
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Data Source** | Yahoo Finance API via `yfinance` |
+| **Analysis** | Python — `pandas`, `numpy`, `scipy` |
+| **Visualization (Python)** | `matplotlib`, `seaborn` |
+| **Dashboard** | Vanilla HTML5 + CSS3 + Chart.js 4.4 |
+| **Fonts** | IBM Plex Mono, IBM Plex Sans (Google Fonts) |
+| **Deployment** | Netlify (auto-deploy from GitHub) |
+| **Excel Report** | `openpyxl` with conditional formatting |
+| **Scheduling** | Python `schedule` library |
+
+---
+
+## 📁 Project Structure
 
 ```
-stock_project/
-├── fetch_live_data.py          ← Step 1: Pull live data from Yahoo Finance
-├── stock_analysis.py           ← Step 2: Python EDA + 6 analysis charts
-├── build_excel.py              ← Step 3: Build Excel report
-├── Stock_Live_Dashboard.html   ← Step 4: Open in browser for live dashboard
-├── data/
-│   ├── stock_history.csv       ← Historical OHLCV data (1 year, 2,610 rows)
-│   ├── latest_snapshot.csv     ← Latest prices + 52W high/low metrics
-│   └── stock_stats.csv         ← Risk/return statistics per ticker
-├── charts/                     ← Auto-generated PNG charts (dark theme)
+Stock-market-analytics-project/
+│
+├── 📊 Stock_Live_Dashboard.html     # Main interactive dashboard (4 tabs, 8+ charts)
+│
+├── 🐍 generate_dashboard_data.py    # Core pipeline: fetch → calculate → export live_data.js
+├── 🐍 stock_analysis.py             # Python EDA: 6 matplotlib/seaborn charts + stats
+├── 🐍 build_excel.py                # Generates 5-tab formatted Excel workbook
+├── 🐍 fetch_live_data.py            # Alpha Vantage API integration (optional)
+├── 🐍 daily_scheduler.py            # Auto-runs data pipeline on a schedule
+│
+├── 📂 data/
+│   ├── live_data.js                 # Auto-generated: real stock data as JS object
+│   ├── stock_history.csv            # Historical price data (CSV)
+│   ├── latest_snapshot.csv          # Most recent prices snapshot
+│   ├── stock_stats.csv              # Computed metrics (Sharpe, VaR, etc.)
+│   └── generate_stock_data.py       # Data utility script
+│
+├── 📂 charts/
 │   ├── chart1_normalised_performance.png
 │   ├── chart2_monthly_heatmap.png
 │   ├── chart3_risk_return.png
 │   ├── chart4_correlation.png
 │   ├── chart5_price_volume.png
 │   └── chart6_rolling_sharpe.png
-└── reports/
-    └── Stock_Market_Analytics.xlsx   ← 5-tab Excel report
+│
+├── 📄 Stock_Market_Analytics.xlsx   # Pre-generated 5-tab Excel report
+├── 📄 netlify.toml                  # Netlify deployment config + cache headers
+├── 📄 .env.example                  # Template for API keys
+└── 📄 .gitignore                    # Python, Node, env exclusions
 ```
 
 ---
 
-## 🚀 Quick Start
+## 📱 Dashboard Tabs
 
-### Step 1: Install dependencies
+### Tab 1 — Overview
+The main view showing price chart with MA50/MA200 overlays and SPY benchmark, plus a Risk vs Return scatter plot. Below that: returns distribution histogram, correlation matrix, and rolling Sharpe chart.
+
+### Tab 2 — Risk Analytics
+Four charts: Drawdown Timeline, Rolling 30-Day Volatility, VaR vs CVaR bar chart, and a Risk Metrics Heatmap comparing all stocks side-by-side.
+
+### Tab 3 — Portfolio
+Three strategies compared: Equal Weight, Max Sharpe, Min Variance. Includes an allocation pie chart, strategy comparison bar chart, and a **Custom Portfolio Builder** with real-time sliders.
+
+### Tab 4 — Monte Carlo
+200-path, 30-day forward simulation using Geometric Brownian Motion. Shows P10/P50/P90 forecast cones per stock.
+
+---
+
+## 📐 Analytics Metrics
+
+| Metric | Formula | Description |
+|--------|---------|-------------|
+| **Annualised Return** | `mean(daily_ret) × 252` | Expected yearly return |
+| **Annualised Volatility** | `std(daily_ret) × √252` | Risk measure |
+| **Sharpe Ratio** | `(Ann_Ret − RF) / Ann_Vol` | Risk-adjusted return (RF = 5.25%) |
+| **Sortino Ratio** | `Sharpe × 0.8` | Downside-only risk adjustment |
+| **Calmar Ratio** | `Ann_Ret / Max_Drawdown` | Return per unit of drawdown |
+| **Max Drawdown** | `min(price/peak − 1)` | Worst peak-to-trough loss |
+| **VaR 95%** | 5th percentile of daily returns | Daily loss at 95% confidence |
+| **CVaR 95%** | Mean of returns below VaR | Expected loss beyond VaR |
+| **MA Crossover** | MA50 crosses MA200 | Golden Cross / Death Cross signal |
+| **Monte Carlo** | `GBM: dS = S(μdt + σdW)` | 200 paths, 30-day forecast |
+
+---
+
+## 📈 Charts
+
+<div align="center">
+
+| Chart | Preview |
+|-------|---------|
+| Normalised Performance | `charts/chart1_normalised_performance.png` |
+| Monthly Heatmap | `charts/chart2_monthly_heatmap.png` |
+| Risk vs Return | `charts/chart3_risk_return.png` |
+| Correlation Matrix | `charts/chart4_correlation.png` |
+| Price + Volume | `charts/chart5_price_volume.png` |
+| Rolling Sharpe | `charts/chart6_rolling_sharpe.png` |
+
+</div>
+
+---
+
+## ⚡ Quick Start
+
+### 1. Clone the Repository
 ```bash
-pip install yfinance pandas matplotlib seaborn openpyxl
+git clone https://github.com/pavan12-dotcom/Stock-market-analytics-project.git
+cd Stock-market-analytics-project
 ```
 
-### Step 2: Fetch live data
+### 2. Install Dependencies
 ```bash
-python3 fetch_live_data.py
+pip install yfinance pandas numpy matplotlib seaborn openpyxl python-dotenv requests
 ```
 
-### Step 3: Run analysis & generate charts
+### 3. Generate Fresh Data
 ```bash
-python3 stock_analysis.py
+python generate_dashboard_data.py
 ```
+> This fetches the last 1 year of data from Yahoo Finance and writes `data/live_data.js`
 
-### Step 4: Build Excel report
+### 4. Open the Dashboard
 ```bash
-python3 build_excel.py
+# Open directly in browser (Windows)
+start Stock_Live_Dashboard.html
+
+# Or use a local server for best results
+python -m http.server 8080
+# Then visit: http://localhost:8080
 ```
 
-### Step 5: Open dashboard
-Open `Stock_Live_Dashboard.html` in your browser — no server needed!
-
----
-
-## 📊 What's Included
-
-| Deliverable | Contents |
-|---|---|
-| **Live Dashboard** | Ticker tape, KPIs, 9 interactive charts, stock table, sector breakdown |
-| **Python Analysis** | 6 dark-themed charts: normalised returns, heatmap, risk-return, correlation, OHLCV, rolling Sharpe |
-| **Excel Report** | 5 sheets: Market Overview, Risk & Performance, Monthly Returns, Charts, Raw Data |
-| **SQL-ready Data** | CSV exports ready for PostgreSQL/SQLite loading |
-| **Live Data Fetcher** | One script to refresh all data from Yahoo Finance every morning |
-
----
-
-## 📈 Analysis Techniques Used
-
-- **Normalised Price Performance** — Compare all stocks on equal footing (Base = 100)
-- **Monthly Returns Heatmap** — Visualise seasonality and performance patterns
-- **Risk-Return Scatter (Sharpe)** — Identify best risk-adjusted investments
-- **Correlation Matrix** — Understand diversification and co-movement
-- **Rolling 30-Day Sharpe Ratio** — Track risk-adjusted performance over time
-- **Annualised Volatility** — Measure true investment risk per stock
-- **52-Week High/Low** — Understand price range and momentum
-
----
-
-## 🛠 Tech Stack
-
-| Tool | Purpose |
-|---|---|
-| **Python** (pandas, numpy) | Data wrangling & analysis |
-| **matplotlib, seaborn** | Chart generation |
-| **yfinance** | Yahoo Finance live data API |
-| **openpyxl** | Excel report generation |
-| **Chart.js** | Interactive HTML dashboard |
-| **HTML5 / CSS3** | Dashboard UI (no framework needed) |
-
----
-
-## 📦 Dataset Summary
-
-| Metric | Value |
-|---|---|
-| Stocks Tracked | 10 (AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, JPM, JNJ, V, WMT) |
-| Data Points | 2,610 rows |
-| Date Range | 1 Year (rolling, updates on each fetch) |
-| Fields | Ticker, OHLCV, Daily Return, Beta, Sector, 52W High/Low |
-| Null Values | 0 |
-| OHLCV Violations | 0 |
-
----
-
-## 💡 How to Make It Truly Real-Time
-
-Schedule `fetch_live_data.py` to run every morning:
-
-**On Mac/Linux (cron job):**
+### 5. Run Full Analysis (Python Charts + Excel)
 ```bash
-# Run every weekday at 9:00 AM
-0 9 * * 1-5 python3 /path/to/stock_project/fetch_live_data.py
+python stock_analysis.py        # Generates 6 charts in /charts/
+python build_excel.py           # Generates 5-tab Excel workbook
 ```
 
-**On Windows (Task Scheduler):**
-- Open Task Scheduler → Create Basic Task
-- Set trigger: Daily at 9:00 AM
-- Set action: `python3 fetch_live_data.py`
+### 6. Auto-refresh Data Daily (Optional)
+```bash
+python daily_scheduler.py       # Runs generate_dashboard_data.py every 24h
+```
 
 ---
 
-*Built as an Advanced Data Analyst Portfolio Project · Real-Time · End-to-End · Production Ready*
+## 🔄 Data Pipeline
+
+```
+Yahoo Finance API
+      │
+      ▼
+generate_dashboard_data.py
+      │
+      ├── fetch_data_via_yahoo()     → 1 year OHLCV for all 10 stocks + SPY
+      ├── calculate_metrics()        → Ann Return, Volatility, Sharpe per stock
+      ├── generate_enriched()        → MA50, MA200, Roll_Vol, Monte Carlo
+      ├── portfolio_optimization()   → 5,000 random portfolios → Max Sharpe + Min Var
+      └── generate_live_data_js()    → Writes data/live_data.js
+                  │
+                  ▼
+      Stock_Live_Dashboard.html
+      (loads live_data.js → renders all charts)
+```
+
+**Data flows:**
+- `data/live_data.js` — Primary source for the HTML dashboard
+- `data/stock_history.csv` — Full price history for Python scripts
+- `data/latest_snapshot.csv` — Current prices for quick reference
+- `charts/*.png` — Static output from `stock_analysis.py`
+
+---
+
+## 💼 Portfolio Optimization
+
+Uses **Monte Carlo Portfolio Simulation** with 5,000 random weight combinations:
+
+```python
+for i in range(5000):
+    weights = random_weights(n_stocks)        # Random, sum to 1
+    p_return = weights @ mean_returns          # Expected return
+    p_vol    = sqrt(weights.T @ cov @ weights) # Portfolio volatility
+    p_sharpe = (p_return - RF_RATE) / p_vol   # Sharpe ratio
+
+max_sharpe_portfolio = argmax(sharpe_ratios)
+min_variance_portfolio = argmin(volatilities)
+```
+
+**Result:** Efficient Frontier portfolios with exact per-stock weights displayed in the dashboard.
+
+---
+
+## 🚀 Deployment
+
+The dashboard auto-deploys to Netlify on every `git push`:
+
+```
+git push origin main
+    │
+    ▼  (GitHub webhook → Netlify)
+Netlify CDN
+    │
+    ├── Serves Stock_Live_Dashboard.html (no-cache)
+    ├── Serves data/live_data.js (no-cache)
+    └── Static assets (1h cache)
+```
+
+**Cache Strategy** (`netlify.toml`):
+- `*.html` → `no-cache` (always fresh)
+- `data/live_data.js` → `no-cache` (data changes on push)
+- Everything else → `max-age=3600` (1h CDN cache)
+
+---
+
+## ⚙️ Configuration
+
+### Environment Variables (`.env`)
+Copy `.env.example` and fill in:
+
+```env
+# Optional: Alpha Vantage for real-time intraday data
+ALPHA_VANTAGE_API_KEY=your_key_here
+
+# Yahoo Finance is used by default (no key needed)
+DATA_PROVIDER=yahoo
+```
+
+### Customize Tickers
+In `generate_dashboard_data.py`:
+```python
+TICKERS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA',
+           'NVDA', 'JPM', 'JNJ', 'V', 'WMT']
+```
+
+### Risk-Free Rate
+```python
+RF_RATE = 0.0525  # 5.25% US T-bill (update as needed)
+```
+
+---
+
+## 🗂 Key Files Reference
+
+| File | Purpose | Run |
+|------|---------|-----|
+| `generate_dashboard_data.py` | **Main pipeline** — fetches data, computes all metrics, outputs `live_data.js` | `python generate_dashboard_data.py` |
+| `Stock_Live_Dashboard.html` | **Interactive dashboard** — 4 tabs, 8+ charts, portfolio builder | Open in browser |
+| `stock_analysis.py` | **EDA script** — 6 Python charts saved as PNG | `python stock_analysis.py` |
+| `build_excel.py` | **Excel report** — 5-tab formatted workbook | `python build_excel.py` |
+| `fetch_live_data.py` | Alpha Vantage real-time integration | `python fetch_live_data.py` |
+| `daily_scheduler.py` | Auto-scheduler for daily data refresh | `python daily_scheduler.py` |
+
+---
+
+<div align="center">
+
+**Built with ❤️ for Data Analytics portfolios**
+
+[![Live Demo](https://img.shields.io/badge/🚀%20View%20Live%20Dashboard-stock--analysis--dashboards.netlify.app-blueviolet?style=for-the-badge)](https://stock-analysis-dashboards.netlify.app)
+
+*Python · Yahoo Finance · Chart.js · Netlify · Excel*
+
+</div>

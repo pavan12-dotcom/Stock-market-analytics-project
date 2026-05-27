@@ -1,12 +1,48 @@
-node_modules/
-.netlify/
-.env
-.env.local
-*.pyc
+# ── Python ────────────────────────────────────────────
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
 *.egg-info/
 .Python
+dist/
+build/
+*.egg
+
+# ── Virtual Environments ───────────────────────────────
 .venv/
 venv/
-*.log
+env/
+ENV/
+
+# ── Environment / Secrets ──────────────────────────────
+.env
+.env.local
+.env.production
+
+# ── Netlify ────────────────────────────────────────────
+.netlify/
+
+# ── Node / npm ─────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ── OS Files ───────────────────────────────────────────
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ──────────────────────────────────────────────
+*.log
+
+# ── Temp / Archives ───────────────────────────────────
+*.zip
+*.tar.gz
+*.rar
+
+# ── IDE ───────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
