@@ -1,16 +1,20 @@
 # 📈 Real-Time Stock Market Analytics Platform
 
-![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)
-![Yahoo Finance](https://img.shields.io/badge/Data-Yahoo%20Finance%20API-6001D2?style=flat)
-![Excel](https://img.shields.io/badge/Report-Excel%205--Tab-217346?style=flat&logo=microsoft-excel&logoColor=white)
-![Chart.js](https://img.shields.io/badge/Dashboard-Chart.js-FF6384?style=flat)
-![Status](https://img.shields.io/badge/Status-Production%20Ready-00d084?style=flat)
+[![GitHub Repo](https://img.shields.shields.shields.shields.io/badge/GitHub-Repository-blue?style=flat&logo=github&logoColor=white)](https://github.com/pavan12-dotcom/Stock-market-analytics-project)
+[![GitHub Stars](https://img.shields.shields.shields.shields.io/github/stars/pavan12-dotcom/Stock-market-analytics-project?style=flat)](https://github.com/pavan12-dotcom/Stock-market-analytics-project/stargazers)
+[![GitHub Forks](https://img.shields.shields.shields.shields.io/github/forks/pavan12-dotcom/Stock-market-analytics-project?style=flat)](https://github.com/pavan12-dotcom/Stock-market-analytics-project/network/members)
+![Python](https://img.shields.shields.shields.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)
+![Yahoo Finance](https://img.shields.shields.shields.shields.io/badge/Data-Yahoo%20Finance%20API-6001D2?style=flat)
+![Excel](https://img.shields.shields.shields.shields.io/badge/Report-Excel%205--Tab-217346?style=flat&logo=microsoft-excel&logoColor=white)
+![Chart.js](https://img.shields.shields.shields.shields.io/badge/Dashboard-Chart.js-FF6384?style=flat)
+![Status](https://img.shields.shields.shields.shields.io/badge/Status-Production%20Ready-00d084?style=flat)
 
 An end-to-end Data Analyst project that tracks **10 major stocks** (AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, JPM, JNJ, V, WMT) with live data from Yahoo Finance — delivering a Python analysis pipeline, interactive HTML dashboard, and a professional Excel report.
 
 ---
 
 [![Live Dashboard](https://img.shields.shields.shields.shields.io/badge/Live-Dashboard-blueviolet?style=flat&logo=netlify&logoColor=white)](https://stock-analysis-dashboards.netlify.app)
+[![GitHub Repo](https://img.shields.shields.shields.shields.io/badge/View_on-GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/pavan12-dotcom/Stock-market-analytics-project)
 
 ## 📋 Problem Statement
 

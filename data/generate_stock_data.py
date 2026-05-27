@@ -1,6 +1,12 @@
+import os
+import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 np.random.seed(42)
 
@@ -46,7 +52,7 @@ for ticker, info in STOCKS.items():
 
 df = pd.DataFrame(all_data)
 df['date'] = pd.to_datetime(df['date'])
-df.to_csv('/home/claude/stock_project/data/stock_history.csv', index=False)
+df.to_csv(os.path.join(BASE_DIR, 'stock_history.csv'), index=False)
 
 # Latest snapshot
 latest = df.groupby('ticker').last().reset_index()
@@ -58,7 +64,7 @@ latest['52w_high']  = df.groupby('ticker')['high'].max().values
 latest['52w_low']   = df.groupby('ticker')['low'].min().values
 latest['avg_vol']   = df.groupby('ticker')['volume'].mean().round(0).astype(int).values
 latest['market_cap'] = (latest['close'] * np.random.randint(5_000_000_000, 50_000_000_000, len(latest))).round(-6)
-latest.to_csv('/home/claude/stock_project/data/latest_snapshot.csv', index=False)
+latest.to_csv(os.path.join(BASE_DIR, 'latest_snapshot.csv'), index=False)
 
 print(f"Generated {len(df):,} rows across {len(STOCKS)} stocks over {len(trading_days)} trading days")
 print(latest[['ticker','name','close','change_pct','volume']].to_string(index=False))

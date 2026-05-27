@@ -18,6 +18,8 @@ Usage:
 """
 
 import subprocess, sys, os, json, time
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 import requests
 from dotenv import load_dotenv
 

@@ -13,6 +13,8 @@ Usage:
 
 import sys
 import os
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 import pandas as pd
 import numpy as np
 import matplotlib
